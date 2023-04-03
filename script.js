@@ -72,7 +72,6 @@ window.onload = () => {
   }
   
   function updateUI(param, index) {
-    // bersihkan isi element "content"
     const result = showUI(param, index);
     content.insertAdjacentHTML('beforeend', result);
   }
