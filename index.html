@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.7.2/sweetalert2.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
+  <title>expense tracker app</title>
+</head>
+<body>
+
+  <div class="container my-4">
+    <div class="row">
+      <div class="col-md-8 mx-auto">
+
+        <!-- box balance -->
+        <div class="bg-dark p-5 rounded-3">
+          <div class="d-flex justify-content-between align-items-center">
+            <div class="d-block">
+              <h6 class="fw-normal text-white">CURRENT BALANCE</h6>
+              <h1 class="fw-normal text-white my-auto balance">$0</h1>
+            </div>
+            <h5 class="fw-normal text-light my-auto">USD</h5>
+          </div>
+        </div>
+        
+        <!-- box income and expense -->
+        <div class="bg-white p-4 shadow my-3 rounded-2">
+          <div class="d-flex justify-content-around align-items-center">
+            <div class="d-block text-center my-auto">
+              <div class="d-flex align-items-center mb-2">
+                <i class="fa-solid fa-arrow-trend-up my-auto me-2 text-green"></i>
+                <span class="d-flex fw-light my-auto">INCOME</span>
+              </div>
+              <h3 class="fw-normal text-green income">$0</h3>
+            </div>
+            <div class="gap"></div>
+            <div class="d-block text-center my-auto">
+              <div class="d-flex align-items-center mb-2">
+                <i class="fa-solid fa-arrow-trend-down my-auto me-2 text-red"></i>
+                <span class="d-flex fw-light my-auto">EXPENSE</span>
+              </div>
+              <h3 class="fw-normal text-red expense">$0</h3>
+            </div>
+          </div>
+        </div>
+        
+        <!-- search input -->
+        <div class="form-group">
+          <input 
+            type="text" 
+            class="form-control search-input py-2 px-3 rounded-0"
+            placeholder="Enter something in here ...">
+        </div>
+        
+        <!-- history wrapper -->
+        <div class="bg-white p-3 shadow my-3">
+          <h5 class="fw-normal">History</h5><hr>
+          <div class="content"></div>
+        </div>
+        
+        <!-- add transaction -->
+        <div class="bg-white p-3 shadow">
+          <h5 class="fw-normal">Add new transaction</h5><hr>
+          <button 
+            class="btn btn-primary rounded-1 w-100 btn-modal"
+            data-bs-toggle="modal"
+            data-bs-target="#modalBox">
+            Add new transaction
+          </button>
+        </div>
+
+        <!-- footer -->
+        <div class="text-center mt-4">
+          <span class="fw-light">
+            created by 
+            <a 
+              href="https://instagram.com/candradwicahyo18" 
+              target="_blank"
+              class="text-decoration-none text-primary fw-normal">
+              candra dwi cahyo
+            </a>
+          </span>
+        </div>
+        
+        <!-- Modal -->
+        <div class="modal fade" id="modalBox" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5 fw-light" id="exampleModalLabel">Modal Add Transaction</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <div class="form-group mb-3">
+                  <label for="item" class="form-label fw-light">Item Name</label>
+                  <input type="text" id="item" class="form-control input-item" placeholder="Item name ...">
+                </div>
+                <div class="form-group">
+                  <label for="amount" class="form-label fw-light">Amount</label>
+                  <input type="number" id="amount" class="form-control input-amount" placeholder="Amount ...">
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary rounded-1" data-bs-dismiss="modal">close</button>
+                <button type="button" class="btn btn-primary rounded-1 btn-submit">submit</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.7.2/sweetalert2.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
