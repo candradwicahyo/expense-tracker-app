@@ -50,11 +50,11 @@ window.onload = () => {
     // jika semua input masih kosong
     if (!item && !amount) return alerts('error', 'field`s was empty!');
     // jika input "item" kosong
-    if (!item) return alert('error', 'field item was empty!');
+    if (!item) return alerts('error', 'field item was empty!');
     // jika input "amount" kosong
-    if (!amount) return alert('error', 'field amount was empty!');
+    if (!amount) return alerts('error', 'field amount was empty!');
     // jika jumlah karakter pada input "item" terlalu panjang
-    if (item.length > 50) return alerta('error', 'field item must be less then 50 character!');
+    if (item.length > 50) return alerts('error', 'field item must be less then 50 character!');
     // jika input "amount" berisi sebuah spasi
     if (amount.match(/\s/g)) return alerts('error', 'The amount field can only contain numbers and no spaces');
     // jika jumlah karakter pada input "amount" terlalu panjang
