@@ -1,4 +1,4 @@
-window.onload = () => {
+window.addEventListener('DOMContentLoaded', () => {
   
   let tasks = [];
   
@@ -13,15 +13,17 @@ window.onload = () => {
   
   function clear() {
     // bersihkan value input
-    inputItem.value = '';
-    inputAmount.value = '';
+    const form = document.querySelector('.form');
+    form.reset();
   }
   
   // ketika tombol submit ditekan, jalankan fungsi addTransaction()
   const btnSubmit = document.querySelector('.btn-submit');
   btnSubmit.addEventListener('click', addTransaction);
   
-  function addTransaction() {
+  function addTransaction(event) {
+    // mencegah aksi default dari element HTML seperti link, form dan lain sebagainya
+    event.preventDefault();
     // value input
     const item = inputItem.value.trim();
     const amount = inputAmount.value.trim();
@@ -29,38 +31,56 @@ window.onload = () => {
     if (validate(item, amount) == true) {
       // masukkan value input sebagai "objek"
       const object = {item: item, amount: parseFloat(amount)};
-      // masukkan isi variabel "object" ke variabel "tasks"
-      tasks.push(object);
-      // simpan ke localstorage
-      saveToLocalStorage();
-      // tampilkan element ke halaman
-      updateUI(object);
-      // total semua pemasukan dan pengeluaran
-      updateBalance();
-      // beri pesan bahwa "transaksi berhasil ditambahkan"
-      alerts('success', 'New transaction has been added!');
-      // muat data yang sudah disimpan kedalam localstorage
-      loadData();
-      // bersihkan value input
-      clear();
+      // cek apakah data yang diinputkan sudah pernah dibuat
+      if (isDataExist(object)) {
+        // jika data sudah pernah dibuat
+        return alerts('error', 'Data is already in the list!');
+      } else {
+        // masukkan isi variabel "object" ke variabel "tasks"
+        tasks.unshift(object);
+        // simpan ke localstorage
+        saveToLocalStorage();
+        // tampilkan element ke halaman
+        updateUI(object);
+        // total semua pemasukan dan pengeluaran
+        updateBalance();
+        // beri pesan bahwa "transaksi berhasil ditambahkan"
+        alerts('success', 'New transaction has been added!');
+        // muat data yang sudah disimpan kedalam localstorage
+        loadData();
+        // bersihkan value input
+        clear();
+      }
     }
   }
   
   function validate(item, amount) {
     // jika semua input masih kosong
-    if (!item && !amount) return alerts('error', 'field`s was empty!');
+    if (!item && !amount) return alerts('error', 'all field is empty!');
     // jika input "item" kosong
-    if (!item) return alerts('error', 'field item was empty!');
+    if (!item) return alerts('error', 'field item is empty!');
     // jika input "amount" kosong
-    if (!amount) return alerts('error', 'field amount was empty!');
+    if (!amount) return alerts('error', 'field amount is empty!');
     // jika jumlah karakter pada input "item" terlalu panjang
-    if (item.length > 50) return alerts('error', 'field item must be less then 50 character!');
+    if (item.length > 30) return alerts('error', 'field item must be less than 30 character!');
     // jika input "amount" berisi sebuah spasi
     if (amount.match(/\s/g)) return alerts('error', 'The amount field can only contain numbers and no spaces');
     // jika jumlah karakter pada input "amount" terlalu panjang
-    if (amount.length > 10) return alerts('error', 'field amount must be less then 10 character!');
+    if (amount.length > 10) return alerts('error', 'field amount must be no more than 10 character!');
     // jika berhasil melewati semua validasi
     return true;
+  }
+  
+  function isDataExist({item, amount}) {
+    // hasil default apabila data belum pernah dibuat sama sekali
+    let exist = false;
+    // looping variabel "tasks"
+    tasks.forEach(task => {
+      // apabila data sudah pernah dibuat
+      if (task.item == item && task.amount == amount) exist = true;
+    });
+    // kembalikan nilai berupa boolean true atau false
+    return exist;
   }
   
   function saveToLocalStorage() {
@@ -68,11 +88,13 @@ window.onload = () => {
       simpan isi variabel "tasks" kedalam localstorage dan parsing isi 
       variabel "tasks" menjadi string JSON
     */
-    localStorage.setItem('expense-app', JSON.stringify(tasks));
+    localStorage.setItem('expense-tracker-app', JSON.stringify(tasks));
   }
   
   function updateUI(param, index) {
+    // render data dan jadikan element HTML
     const result = showUI(param, index);
+    // tampilkan hasilnya
     content.insertAdjacentHTML('beforeend', result);
   }
   
@@ -119,15 +141,11 @@ window.onload = () => {
     setValue(total, income, expense);
   }
   
-  const balance = document.querySelector('.balance');
-  const incomeText = document.querySelector('.income');
-  const expenseText = document.querySelector('.expense');
-  
   function setValue(total, income, expense) {
     // set value dari tiap parameter
-    balance.textContent = `${filterBalance(total)}`;
-    incomeText.textContent = `$${income}`;
-    expenseText.textContent = `$${expense}`;
+    document.querySelector('.balance').textContent = `${filterBalance(total)}`;
+    document.querySelector('.income').textContent = `$${income}`;
+    document.querySelector('.expense').textContent = `$${expense}`;
   }
   
   function filterBalance(total) {
@@ -152,7 +170,7 @@ window.onload = () => {
     // bersihkan isi element "content"
     content.innerHTML = '';
     // dapatkan data yang sudah disimpan kedalam localstorage
-    const data = localStorage.getItem('expense-app');
+    const data = localStorage.getItem('expense-tracker-app');
     /*
       jika variabel "data" menghasilkan boolean "true" maka parsing data tersebut dan masukkan datanya 
       kedalam variabel "tasks". tapi jika variabel "data" menghasilkan boolean "false"
@@ -221,4 +239,4 @@ window.onload = () => {
     });
   });
   
-}
+});
