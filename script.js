@@ -25,36 +25,38 @@ window.addEventListener('DOMContentLoaded', () => {
     // mencegah aksi default dari element HTML seperti link, form dan lain sebagainya
     event.preventDefault();
     // value input
-    const item = inputItem.value.trim();
-    const amount = inputAmount.value.trim();
+    const object = getInputValues();
     // lakukan validasi
-    if (validate(item, amount) == true) {
-      // masukkan value input sebagai "objek"
-      const object = {item: item, amount: parseFloat(amount)};
+    if (validate(object)) {
       // cek apakah data yang diinputkan sudah pernah dibuat
-      if (isDataExist(object)) {
-        // jika data sudah pernah dibuat
-        return alerts('error', 'Data is already in the list!');
-      } else {
-        // masukkan isi variabel "object" ke variabel "tasks"
-        tasks.unshift(object);
-        // simpan ke localstorage
-        saveToLocalStorage();
-        // tampilkan element ke halaman
-        updateUI(object);
-        // total semua pemasukan dan pengeluaran
-        updateBalance();
-        // beri pesan bahwa "transaksi berhasil ditambahkan"
-        alerts('success', 'New transaction has been added!');
-        // muat data yang sudah disimpan kedalam localstorage
-        loadData();
-        // bersihkan value input
-        clear();
-      }
+      // jika data sudah pernah dibuat
+      if (isDataExist(object)) return alerts('error', 'Data is already in the list!');
+      // masukkan isi variabel "object" ke variabel "tasks"
+      tasks.unshift(object);
+      // simpan ke localstorage
+      saveToLocalStorage();
+      // beri pesan bahwa "transaksi berhasil ditambahkan"
+      alerts('success', 'New transaction has been added!');
+      // muat data yang sudah disimpan kedalam localstorage
+      loadData();
+      // bersihkan value input
+      clear();
     }
   }
   
-  function validate(item, amount) {
+  function convertToCurrency(price) {
+    price = price.toLocaleString('US', { style: 'currency', currency: 'USD' });
+    return price;
+  }
+  
+  function getInputValues() {
+    return {
+      item: inputItem.value.trim(),
+      amount: inputAmount.value.trim()
+    };
+  }
+  
+  function validate({ item, amount }) {
     // jika semua input masih kosong
     if (!item && !amount) return alerts('error', 'all field is empty!');
     // jika input "item" kosong
@@ -71,7 +73,7 @@ window.addEventListener('DOMContentLoaded', () => {
     return true;
   }
   
-  function isDataExist({item, amount}) {
+  function isDataExist({ item, amount }) {
     // hasil default apabila data belum pernah dibuat sama sekali
     let exist = false;
     // looping variabel "tasks"
@@ -104,7 +106,7 @@ window.addEventListener('DOMContentLoaded', () => {
     <div class="box-content shadow-sm ${setString(amount, 'expense', 'income')}" data-id="${index}">
       <h6 class="fw-normal my-auto">${item}</h6>
       <h5 class="fw-normal my-auto ${setString(amount, 'text-red', 'text-green')}">
-        ${setString(amount, '-', '+')} $${Math.abs(amount)}
+       ${setString(amount, '-', '+')} ${convertToCurrency(Math.abs(amount))}
       </h5>
     </div>
     `;
@@ -121,7 +123,7 @@ window.addEventListener('DOMContentLoaded', () => {
   
   function updateBalance() {
     // looping variabel "tasks" dan ambil object dengan properti "amount"
-    const amount = tasks.map(task => task.amount);
+    const amount = tasks.map(task => parseFloat(task.amount));
     // jumlahkan semua isi dari variabel "amount"
     const total = amount.reduce((acc, num) => acc += num, 0);
     // cari isi dari variabel "amount" yang lebih besar dari angka 0, lalu jumlahkan
@@ -143,9 +145,9 @@ window.addEventListener('DOMContentLoaded', () => {
   
   function setValue(total, income, expense) {
     // set value dari tiap parameter
-    document.querySelector('.balance').textContent = `${filterBalance(total)}`;
-    document.querySelector('.income').textContent = `$${income}`;
-    document.querySelector('.expense').textContent = `$${expense}`;
+    document.querySelector('.balance').textContent = `${filterBalance(convertToCurrency(total))}`;
+    document.querySelector('.income').textContent = `${convertToCurrency(income)}`;
+    document.querySelector('.expense').textContent = `${convertToCurrency(expense)}`;
   }
   
   function filterBalance(total) {
@@ -154,7 +156,7 @@ window.addEventListener('DOMContentLoaded', () => {
       dan jalankan fungsi Math.abs() guna untuk mengkonversikan angka minus menjadi angka biasa
       hasil awal : -$-100 menjadi -$100
     */
-    return (total < 0) ? `- $${Math.abs(total)}` : `$${total}`;
+    return (total < 0) ? `- ${Math.abs(total)}` : `${total}`;
   }
   
   function alerts(type, text) {
@@ -214,8 +216,6 @@ window.addEventListener('DOMContentLoaded', () => {
         tasks.splice(id, 1);
         // simpan perubahannya kedalam localstorage
         saveToLocalStorage();
-        // update total pemasukan dan pengeluaran
-        updateBalance();
         // beri pesan bahwa "data transaksi berhasil dihapus"
         alerts('success', 'Data transaction has been deleted!');
         // muat data yang ada di localstorage
