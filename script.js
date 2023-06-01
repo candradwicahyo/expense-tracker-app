@@ -169,8 +169,7 @@ window.addEventListener('DOMContentLoaded', () => {
   }
   
   function loadData() {
-    // bersihkan isi element "content"
-    content.innerHTML = '';
+    resetState();
     // dapatkan data yang sudah disimpan kedalam localstorage
     const data = localStorage.getItem('expense-tracker-app');
     /*
@@ -181,10 +180,10 @@ window.addEventListener('DOMContentLoaded', () => {
     tasks = (data) ? JSON.parse(data) : [];
     // looping isi variabel "tasks"
     tasks.forEach((task, index) => {
-      // tampilkan element yang ke halaman
-      updateUI(task, index);
       // update total pemasukan dan pengeluaran
       updateBalance();
+      // tampilkan element yang ke halaman
+      updateUI(task, index);
     });
   }
   
@@ -238,5 +237,12 @@ window.addEventListener('DOMContentLoaded', () => {
       data.style.display = (string.indexOf(value) != -1) ? '' : 'none';
     });
   });
+  
+  function resetState() {
+    content.innerHTML = '';
+    document.querySelector('.balance').textContent = `$0`;
+    document.querySelector('.income').textContent = `$0`;
+    document.querySelector('.expense').textContent = '$0';
+  }
   
 });
